@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_PAYLOAD_ADD_COMMAND = "mythic_rpc_payload_add_command"
 
@@ -21,15 +22,8 @@ class MythicRPCPayloadAddCommandMessage:
         }
 
 
-class MythicRPCPayloadAddCommandMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCPayloadAddCommandMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCPayloadAddCommand(

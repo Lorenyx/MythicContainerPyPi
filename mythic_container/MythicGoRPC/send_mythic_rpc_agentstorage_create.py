@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 import base64
 
 MYTHIC_RPC_AGENTSTORAGE_CREATE = "mythic_rpc_agentstorage_create"
@@ -22,15 +23,8 @@ class MythicRPCAgentstorageCreateMessage:
         }
 
 
-class MythicRPCAgentstorageCreateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCAgentstorageCreateMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCAgentStorageCreate(

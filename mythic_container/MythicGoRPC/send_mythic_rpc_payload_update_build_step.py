@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_PAYLOAD_UPDATE_BUILD_STEP = "mythic_rpc_payload_update_build_step"
 
@@ -33,15 +34,8 @@ class MythicRPCPayloadUpdateBuildStepMessage:
         }
 
 
-class MythicRPCPayloadUpdateBuildStepMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCPayloadUpdateBuildStepMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCPayloadUpdatebuildStep(

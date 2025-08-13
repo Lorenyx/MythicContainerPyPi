@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_AGENTSTORAGE_REMOVE = "mythic_rpc_agentstorage_remove"
 
@@ -18,15 +19,8 @@ class MythicRPCAgentStorageRemoveMessage:
         }
 
 
-class MythicRPCAgentStorageRemoveMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCAgentStorageRemoveMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCAgentStorageRemove(

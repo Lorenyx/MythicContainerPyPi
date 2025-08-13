@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 from .send_mythic_rpc_callbacktoken_create import Token
 
 MYTHIC_RPC_TOKEN_CREATE = "mythic_rpc_token_create"
@@ -23,15 +24,8 @@ class MythicRPCTokenCreateMessage:
         }
 
 
-class MythicRPCTokenCreateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCTokenCreateMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCTokenCreate(

@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 from mythic_container.utils_mythic_file_transfer import getFileFromMythic
 
 MYTHIC_RPC_PAYLOADONHOST_CREATE = "mythic_rpc_payloadonhost_create"
@@ -40,15 +41,8 @@ class MythicRPCPayloadOnHostCreateMessage:
         }
 
 
-class MythicRPCPayloadOnHostCreateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCPayloadOnHostCreateMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCPayloadOnHostCreate(

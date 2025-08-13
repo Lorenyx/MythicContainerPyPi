@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_TASK_UPDATE = "mythic_rpc_task_update"
 
@@ -33,15 +34,8 @@ class MythicRPCTaskUpdateMessage:
         }
 
 
-class MythicRPCTaskUpdateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCTaskUpdateMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCTaskUpdate(

@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 from mythic_container.utils_mythic_file_transfer import sendFileToMythic
 
 MYTHIC_RPC_FILE_UPDATE = "mythic_rpc_file_update"
@@ -36,15 +37,8 @@ class MythicRPCFileUpdateMessage:
         }
 
 
-class MythicRPCFileUpdateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCFileUpdateMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCFileUpdate(

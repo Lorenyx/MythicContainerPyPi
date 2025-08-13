@@ -31,14 +31,7 @@ class MythicRPCCallbackRemoveCommandMessage:
 
 
 class MythicRPCCallbackRemoveCommandMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+    ...
 
 
 async def SendMythicRPCCallbackRemoveCommand(

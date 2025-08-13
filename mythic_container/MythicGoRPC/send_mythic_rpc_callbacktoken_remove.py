@@ -1,5 +1,6 @@
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 from .send_mythic_rpc_callbacktoken_create import MythicRPCCallbackTokenData
 
 MYTHIC_RPC_CALLBACKTOKEN_REMOVE = "mythic_rpc_callbacktoken_remove"
@@ -21,15 +22,8 @@ class MythicRPCCallbackTokenRemoveMessage:
         }
 
 
-class MythicRPCCallbackTokenRemoveMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+class MythicRPCCallbackTokenRemoveMessageResponse(SuccessMessage):
+    ...
 
 
 async def SendMythicRPCCallbackTokenRemove(
