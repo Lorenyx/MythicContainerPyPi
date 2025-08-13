@@ -1,5 +1,9 @@
+from dataclasses import dataclass, field
+
 import mythic_container
+from mythic_container.deprecation import deprecated_property
 from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 import base64
 
 MYTHIC_RPC_AGENTSTORAGE_SEARCH = "mythic_rpc_agentstorage_search"
@@ -30,17 +34,22 @@ class MythicRPCAgentStorageSearchResult:
             logger.info(f"Unknown kwarg {k} - {v}")
 
 
-class MythicRPCAgentStorageSearchMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 agentstorage_messages: [MythicRPCAgentStorageSearchResult] = [],
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        self.AgentStorageMessages = agentstorage_messages
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+@dataclass
+class MythicRPCAgentStorageSearchMessageResponse(SuccessMessage):
+
+    agentstorage_messages: list[MythicRPCAgentStorageSearchResult] = field(default_factory=list)
+
+    def __post_init__(self):
+        if isinstance(self.agentstorage_messages, list):
+            self.agentstorage_messages = [
+                MythicRPCAgentStorageSearchResult(**msg) if isinstance(msg, dict) else msg
+                for msg in self.agentstorage_messages
+            ]
+
+    @property
+    def AgentStorageMessages(self)-> list[MythicRPCAgentStorageSearchResult]:
+        deprecated_property("AgentStorageMessages", "agentstorage_messages")
+        return self.agentstorage_messages
 
 
 async def SendMythicRPCAgentStorageSearch(

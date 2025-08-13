@@ -1,6 +1,9 @@
+from dataclasses import dataclass
+
 import mythic_container
+from mythic_container.deprecation import deprecated_property
 from mythic_container.logging import logger
-import base64
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_APITOKEN_CREATE    = "mythic_rpc_apitoken_create"
 
@@ -28,17 +31,15 @@ class MythicRPCAPITokenCreateMessage:
         }
 
 
-class MythicRPCAPITokenCreateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 apitoken: str = "",
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        self.APIToken = apitoken
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+@dataclass
+class MythicRPCAPITokenCreateMessageResponse(SuccessMessage):
+
+    apitoken: str = ""
+
+    @property
+    def APIToken(self) -> str:
+        deprecated_property("APIToken", "apitoken")
+        return self.apitoken
 
 
 async def SendMythicRPCAPITokenCreate(

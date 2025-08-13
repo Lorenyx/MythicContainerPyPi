@@ -1,6 +1,10 @@
-import mythic_container
-from mythic_container.logging import logger
 import base64
+from dataclasses import dataclass
+
+import mythic_container
+from mythic_container.deprecation import deprecated_property
+from mythic_container.logging import logger
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_CALLBACK_CREATE = "mythic_rpc_callback_create"
 
@@ -72,17 +76,15 @@ class MythicRPCCallbackCreateMessage:
         }
 
 
-class MythicRPCCallbackCreateMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 callback_uuid: str = None,
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        self.CallbackUUID = callback_uuid
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+@dataclass
+class MythicRPCCallbackCreateMessageResponse(SuccessMessage):
+
+    callback_uuid: str | None = None
+
+    @property
+    def CallbackUUID(self) -> str:
+        deprecated_property("CallbackUUID", "callback_uuid")
+        self.callback_uuid
 
 
 async def SendMythicRPCCallbackCreate(

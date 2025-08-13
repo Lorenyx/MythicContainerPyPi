@@ -1,5 +1,9 @@
+from dataclasses import dataclass, field
+
 import mythic_container
 from mythic_container.logging import logger
+from mythic_container.deprecation import deprecated_property
+from mythic_container.MythicGoRPC.messages import SuccessMessage
 
 MYTHIC_RPC_ARTIFACT_SEARCH = "mythic_rpc_artifact_search"
 
@@ -44,17 +48,22 @@ class MythicRPCArtifactSearchMessage:
         }
 
 
-class MythicRPCArtifactSearchMessageResponse:
-    def __init__(self,
-                 success: bool = False,
-                 error: str = "",
-                 artifacts: [dict] = [],
-                 **kwargs):
-        self.Success = success
-        self.Error = error
-        self.Artifacts = [MythicRPCArtifactSearchArtifactData(**x) for x in artifacts]
-        for k, v in kwargs.items():
-            logger.info(f"Unknown kwarg {k} - {v}")
+@dataclass
+class MythicRPCArtifactSearchMessageResponse(SuccessMessage):
+
+    artifacts: list[dict] = field(default_factory=list)
+
+    def __post_init__(self):
+        if isinstance(self.artifacts, list):
+            self.artifacts = [
+                MythicRPCArtifactSearchArtifactData(**artifact) if isinstance(artifact, dict) else artifact
+                for artifact in self.artifacts
+            ]
+
+    @property
+    def Artifacts(self) -> list[MythicRPCArtifactSearchArtifactData]:
+        deprecated_property("Artifacts", "artifacts")
+        return self.artifacts
 
 
 async def SendMythicRPCArtifactSearch(
